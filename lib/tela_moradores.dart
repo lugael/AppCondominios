@@ -1,3 +1,5 @@
+import 'package:app_condominios/fakes.dart';
+import 'package:app_condominios/model.dart';
 import 'package:flutter/material.dart';
 
 class TelaMoradores extends StatefulWidget {
@@ -8,7 +10,7 @@ class TelaMoradores extends StatefulWidget {
 }
 
 class _TelaMoradoresState extends State<TelaMoradores> {
-
+  final List<Morador> _moradores = fakeMoradores();
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +18,10 @@ class _TelaMoradoresState extends State<TelaMoradores> {
     return Scaffold(
       appBar: AppBar(
 
-        title: Text('Home'),
+        title: Text('Moradores'),
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(

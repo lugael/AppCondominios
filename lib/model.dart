@@ -1,7 +1,12 @@
+
+import 'package:uuid/uuid.dart';
+
 class BaseEntity{
   String? id;
 
-  BaseEntity({this.id});
+  BaseEntity({this.id}){
+   id ??= const Uuid().v4();
+  }
 }
 
 class Morador extends BaseEntity{
