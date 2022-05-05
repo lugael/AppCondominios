@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:app_condominios/fakes.dart';
 import 'package:app_condominios/model.dart';
+import 'package:app_condominios/server.dart';
 import 'package:flutter/material.dart';
 
 class TelaMoradores extends StatefulWidget {
@@ -26,8 +24,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
   }
 
   Future<List<Morador>> fetchMoradores() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return fakeMoradores();
+    return await srvGetMoradores();
   }
 
   @override

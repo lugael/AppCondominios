@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:app_condominios/server.dart';
 import 'package:app_condominios/tela_inicial.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   initializeDateFormatting('pt_BR').then((v) => runApp(const AppCondominio()));
 }
 
