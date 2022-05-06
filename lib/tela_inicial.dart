@@ -1,6 +1,8 @@
+import 'package:app_condominios/tela_login.dart';
 import 'package:app_condominios/tela_moradores.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:app_condominios/utils.dart';
 
 class TelaInicial extends StatefulWidget {
   const TelaInicial({Key? key}) : super(key: key);
@@ -75,16 +77,19 @@ class _TelaInicialState extends State<TelaInicial> {
         child: ListView(children: [
       const UserAccountsDrawerHeader(
           accountName: Text('Luis'), accountEmail: Text('luis@luis')),
+      ListTile(leading: Icon(Icons.login), title: Text('Efetuar Login'), onTap: _abrirTelaLogin),
       ListTile(
           leading: Icon(Icons.people_alt), title: Text('Lista de moradores'),onTap: _abrirTelaMoradores),
-      ListTile(leading: Icon(Icons.account_circle), title: Text('Profile')),
       ListTile(leading: Icon(Icons.settings), title: Text('Settings'))
     ]));
   }
+  void _abrirTelaLogin(){
+    Navigator.pop(context);
+    abrirTela(context, const TelaLogin());
+  }
   void _abrirTelaMoradores(){
     Navigator.pop(context);
-    Navigator.push(context,
-        CupertinoPageRoute(builder: (context) => const TelaMoradores()));
+    abrirTela(context, const TelaMoradores());
   }
 }
 
