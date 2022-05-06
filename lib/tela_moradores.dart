@@ -63,7 +63,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
                       leading: CircleAvatar(
                           radius: 28.0,
                           backgroundImage:
-                              AssetImage('assets/${morador.imagemAsset}')),
+                              NetworkImage('https://$urlSrv/imagens/${morador.imagemAsset}')),
                       title: Text('${morador.nome}',
                           style: TextStyle(
                               color: Colors.grey.shade800, fontSize: 14.0)),
@@ -82,7 +82,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
       if (_ordemAsc) {
         _moradores!.sort((Morador.compararNomeAsc));
       } else {
-        _moradores!.sort((Morador.compararNomeAsc));
+        _moradores!.sort((Morador.compararNomeDesc));
       }
     });
   }

@@ -19,16 +19,8 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-Future<List<Morador>> srvGetMoradores(
-    {String? condominioId, String? nome, bool? full }) async {
-  final response = await serverGET(
-      endpoint: 'moradores',
-      params: {'condominioId': condominioId, 'nome': nome, 'full': full});
-  Iterable list = json.decode(response);
-  return list.map((m) => Morador.fromMap(m)).toList();
-}
 
-Future<String> serverGET(
+Future<String> _serverGET(
     {required String endpoint,
     Map<String, dynamic>? params,
     String? token}) async {
@@ -45,4 +37,36 @@ Future<String> serverGET(
     throw map.containsKey('message') ? map['message'] : '';
   }
   return responseBody;
+}
+
+Future<String> _serverPOST({required String endpoint,required String body, String? token}) async {
+
+  final url = Uri.https(urlSrv, endpoint);
+  final headers = token != null ? {'token': token} : null;
+
+  final response = await http.post(url, headers: headers, body: body, encoding: Encoding.getByName("UTF-8"));
+
+  if (response.statusCode != statusOk) {
+    final Map<String, dynamic> map = json.decode(response.body);
+    throw map.containsKey('message') ? map['message'] : '';
+  }
+  return response.body;
+}
+
+Future<List<Morador>> srvGetMoradores(
+    {String? condominioId, String? nome, bool? full }) async {
+  String response = await _serverGET(
+      endpoint: 'moradores',
+      params: {'condominioId': condominioId, 'nome': nome, 'full': full?.toString()});
+  Iterable list = json.decode(response);
+  return list.map((m) => Morador.fromMap(m)).toList();
+}
+
+
+Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async{
+  final strObjLogin =  json.encode({'nomeUsuario': nomeUsuario,'senha':senha});
+  String response = await _serverPOST(endpoint: 'login', body: strObjLogin);
+
+  Map<String, dynamic> mapSessao = json.decode(response);
+  return Sessao.fromMap(mapSessao);
 }

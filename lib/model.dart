@@ -120,17 +120,32 @@ class Usuario extends BaseEntity {
 
   Usuario({String? id, this.nomeUsuario, this.senha, this.perfil, this.morador})
       : super(id: id);
+
+  Usuario.fromMap(Map<String, dynamic> map){
+    nomeUsuario = map['nomeUsuario'];
+    senha = map['senha'];
+    perfil = perfilUsuarioFromId(map['perfil']);
+    morador = map['morador'] == null ? null : Morador.fromMap(map['morador']);
+  }
 }
 
 class Sessao {
   String? token;
   Usuario? usuario;
   DateTime? inicio;
+
+  Sessao({this.token, this.usuario, this.inicio});
+
+  Sessao.fromMap(Map<String, dynamic> map) {
+    token = map['token'];
+    usuario = map['usuario'] == null ? null : Usuario.fromMap(map['usuario']);
+    inicio = map['inicio'] == null ? null : DateTime.tryParse(map['inicio']);
+  }
 }
 
 enum PerfilUsuario { ADMIN, MORADOR }
 
-int? pergilUsuarioToId(PerfilUsuario? perfil) {
+int? perfilUsuarioToId(PerfilUsuario? perfil) {
   if (perfil == null) {
     return null;
   }
