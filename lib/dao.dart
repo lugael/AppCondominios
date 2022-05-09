@@ -20,6 +20,9 @@ class DAO{
 
   Future<void> open() async{
     await _initDBIfNeeded();
+  }
+  Future <void> close() async{
+    await _initDBIfNeeded();
     db?.close();
     db = null;
   }

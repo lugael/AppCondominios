@@ -34,8 +34,9 @@ Future<String> _serverGET(
   final responseBody = utf8.decode(response.bodyBytes);
 
   if (response.statusCode != statusOk) {
-    final Map<String, dynamic> map = json.decode(responseBody);
-    throw map.containsKey('message') ? map['message'] : '';
+    throw response.body;
+    // final Map<String, dynamic> map = json.decode(responseBody);
+    // throw map.containsKey('message') ? map['message'] : '';
   }
   return responseBody;
 }
@@ -51,8 +52,9 @@ Future<String> _serverPOST({required String endpoint,required String body, Strin
   final response = await http.post(url, headers: headers, body: body, encoding: Encoding.getByName("UTF-8"));
 
   if (response.statusCode != statusOk) {
-    final Map<String, dynamic> map = json.decode(response.body);
-    throw map.containsKey('message') ? map['message'] : '';
+    throw response.body;
+    // final Map<String, dynamic> map = json.decode(response.body);
+    // throw map.containsKey('message') ? map['message'] : '';
   }
   return response.body;
 }

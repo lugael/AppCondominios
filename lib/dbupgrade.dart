@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 const dbVersion = 1;
 abstract class DBupgrader{
-  Future<void> execute(Database db) async{}
+  Future<void> execute(Database db) async{ }
 }
 
 DBupgrader? getUpgrader(int version){

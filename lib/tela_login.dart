@@ -77,8 +77,8 @@ class _StateTelaLogin extends State<TelaLogin> {
       print('Login Efetuado');
       await DAO.get().saveSessao(sessao);
       Navigator.pop(context);
-    }).onError((error, stackTrace) {
-      print('Ocorreu um erro durante o login: ${error.toString()}');
+    }, onError:(ex) {
+      print('Ocorreu um erro durante o login:$ex');
     });
   }
 }

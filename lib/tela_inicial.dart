@@ -1,3 +1,4 @@
+import 'package:app_condominios/dao.dart';
 import 'package:app_condominios/tela_login.dart';
 import 'package:app_condominios/tela_moradores.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,15 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
+
+  @override
+  void initState(){
+    super.initState();
+    DAO.get().open().then((value) {
+      DAO.get().close();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
