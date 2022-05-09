@@ -62,7 +62,7 @@ class _StateTelaLogin extends State<TelaLogin> {
       {required String hint, required IconData icon}) {
     return InputDecoration(
         hintText: hint,
-        helperStyle: const TextStyle(fontSize: 12.0,color: Colors.grey),
+        helperStyle: const TextStyle(fontSize: 12.0, color: Colors.grey),
         hintStyle: const TextStyle(fontSize: 20.0, color: Colors.grey),
         enabledBorder:
             UnderlineInputBorder(borderSide: BorderSide(color: normalTxtColor)),
@@ -70,6 +70,7 @@ class _StateTelaLogin extends State<TelaLogin> {
             borderSide: BorderSide(color: focusedTxtColor, width: 2.0)),
         icon: Icon(icon, color: Colors.blue));
   }
+
   void login() {
     final login = _loginControler.text;
     final senha = _senhaControler.text;
@@ -77,9 +78,12 @@ class _StateTelaLogin extends State<TelaLogin> {
       print('Login Efetuado');
       await DAO.get().saveSessao(sessao);
       Navigator.pop(context);
-    }, onError:(ex) {
+    }, onError: (ex) {
       print('Ocorreu um erro durante o login:$ex');
+      
+      showMsg(ctx: context,titulo: 'Não foi possivel efetuar login', mensagem: ex.toString());
     });
   }
-}
 
+
+}

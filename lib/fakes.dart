@@ -1,5 +1,4 @@
 import 'package:app_condominios/model.dart';
-import 'package:uuid/uuid.dart';
 final _condominioPremiatto = Condominio(
   nome: 'Parque Premiatto',
   bairro: 'Boa vista',

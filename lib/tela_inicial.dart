@@ -1,4 +1,6 @@
 import 'package:app_condominios/dao.dart';
+import 'package:app_condominios/model.dart';
+import 'package:app_condominios/tela_boletos.dart';
 import 'package:app_condominios/tela_login.dart';
 import 'package:app_condominios/tela_moradores.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,18 +15,22 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
+  Sessao? _sessao;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    DAO.get().open().then((value) {
-      DAO.get().close();
+    DAO.get().open().then((value) async {
+      Sessao? s = await DAO.get().findSessao();
+      await DAO.get().close();
+      setState(() {
+        _sessao = s;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -83,23 +89,78 @@ class _TelaInicialState extends State<TelaInicial> {
   }
 
   Drawer _buildDrawer() {
-    return Drawer(
-        child: ListView(children: [
-      const UserAccountsDrawerHeader(
-          accountName: Text('Luis'), accountEmail: Text('luis@luis')),
-      ListTile(leading: Icon(Icons.login), title: Text('Efetuar Login'), onTap: _abrirTelaLogin),
-      ListTile(
-          leading: Icon(Icons.people_alt), title: Text('Lista de moradores'),onTap: _abrirTelaMoradores),
-      ListTile(leading: Icon(Icons.settings), title: Text('Settings'))
-    ]));
+    var drawerItems = <Widget>[
+      UserAccountsDrawerHeader(
+          accountName: Text((_sessao == null)
+              ? 'Não está logado'
+              : (_sessao!.usuario?.nomeUsuario?.toUpperCase() ?? '?')),
+          accountEmail: Text((_sessao == null)
+              ? 'Efetue o login'
+              : (_sessao!.usuario?.morador?.nome ?? '?'))),
+    ];
+    if (_sessao == null) {
+      drawerItems.addAll([_buildTileLogin()]);
+    } else {
+      drawerItems.addAll(
+          [_buildTileMoradores(), _buildTileBoletos(), _buildTileLogoff()]);
+    }
+    return Drawer(child: ListView(children: drawerItems));
   }
-  void _abrirTelaLogin(){
+
+  ListTile _buildTileMoradores() {
+    return ListTile(
+        leading: Icon(Icons.people_alt),
+        title: Text('Lista de moradores'),
+        onTap: _abrirTelaMoradores);
+  }
+
+  ListTile _buildTileLogin() {
+    return ListTile(
+        leading: Icon(Icons.login),
+        title: Text('Efetuar Login'),
+        onTap: _abrirTelaLogin);
+  }
+
+  ListTile _buildTileBoletos() {
+    return ListTile(
+        leading: Icon(Icons.picture_as_pdf_rounded),
+        title: Text('Boletos'),
+        onTap: _abrirTelaBoletos);
+  }
+
+  ListTile _buildTileLogoff() {
+    return ListTile(
+        leading: Icon(Icons.block_outlined),
+        title: Text('Efetuar logoff'),
+        onTap: _efetuarLogoff);
+  }
+
+  void _abrirTelaLogin() {
     Navigator.pop(context);
-    abrirTela(context, const TelaLogin());
+    abrirTela(context, const TelaLogin()).then((value) async {
+      DAO.get().findSessao().then((value) {
+        setState(() {
+          _sessao = value;
+        });
+      });
+    });
   }
-  void _abrirTelaMoradores(){
+
+  void _efetuarLogoff() async {
+    Navigator.pop(context);
+    await DAO.get().deleteSessao();
+    setState(() {
+      _sessao = null;
+    });
+  }
+
+  void _abrirTelaMoradores() {
     Navigator.pop(context);
     abrirTela(context, const TelaMoradores());
   }
-}
 
+  void _abrirTelaBoletos() {
+    Navigator.pop(context);
+    abrirTela(context, TelaBoletos(sessao: _sessao!));
+  }
+}

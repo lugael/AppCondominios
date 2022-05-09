@@ -1,7 +1,9 @@
+import 'package:app_condominios/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 final dd_MM_yyyy = DateFormat("dd/MM/yyyy", "pt-BR");
+final valorFmt = NumberFormat("###,##0.00","pt_BR");
 
 class BaseEntity {
   String? id;
@@ -9,7 +11,8 @@ class BaseEntity {
   BaseEntity({this.id}) {
     id ??= const Uuid().v4();
   }
-  BaseEntity.fromMap(Map<String, dynamic> map){
+
+  BaseEntity.fromMap(Map<String, dynamic> map) {
     id = map['id'];
   }
 }
@@ -34,8 +37,10 @@ class Morador extends BaseEntity {
       this.imagemAsset})
       : super(id: id);
 
-  Morador.fromMap(Map<String, dynamic> map) :super.fromMap(map) {
-    condominio = map['condominio'] == null ? null : Condominio.fromMap(map['condominio']);
+  Morador.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+    condominio = map['condominio'] == null
+        ? null
+        : Condominio.fromMap(map['condominio']);
     nome = map['nome'];
     cpf = map['cpf'];
     nascimento =
@@ -69,10 +74,11 @@ class Condominio extends BaseEntity {
   String? cidade;
   String? uf;
 
-  Condominio({String? id, this.nome, this.bairro, this.cidade, this.endereco,this.uf})
+  Condominio(
+      {String? id, this.nome, this.bairro, this.cidade, this.endereco, this.uf})
       : super(id: id);
 
-  Condominio.fromMap(Map<String, dynamic> map): super.fromMap(map){
+  Condominio.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
     nome = map['nome'];
     endereco = map['endereco'];
     bairro = map['bairro'];
@@ -86,13 +92,13 @@ class Boleto extends BaseEntity {
   DateTime? dataRef;
   DateTime? dataEmissao;
   DateTime? dataVencto;
-  double? valor;
+  double? valorDoc;
   double? percJuros;
   double? percMulta;
   double? valorJuros;
   double? valorMulta;
   double? valorFinal;
-  DateTime? dataPago;
+  DateTime? dataPagto;
   double? valorPago;
 
   Boleto(
@@ -101,15 +107,42 @@ class Boleto extends BaseEntity {
       this.dataRef,
       this.dataEmissao,
       this.dataVencto,
-      this.valor,
+      this.valorDoc,
       this.percJuros,
       this.percMulta,
       this.valorJuros,
       this.valorMulta,
       this.valorFinal,
-      this.dataPago,
+      this.dataPagto,
       this.valorPago)
       : super(id: id);
+
+  Boleto.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+    morador = map['morador'] == null ? null : Morador.fromMap(map['morador']);
+    dataRef = map['dataRef'] == null ? null : DateTime.tryParse(map['dataRef']);
+    dataEmissao =
+        map['dataEmissao'] == null ? null : DateTime.tryParse(map['dataEmissao']);
+    valorDoc = map['valorDoc'];
+    percJuros = map['percJuros'];
+    percMulta = map['percMulta'];
+    valorJuros = map['valorJuros'];
+    valorMulta = map['valorMulta'];
+    valorFinal = map['valorFinal'];
+    dataPagto =
+        map['dataPagto'] == null ? null : DateTime.tryParse(map['dataPagto']);
+    valorPago = map['valorPAgo'];
+    dataVencto =  map['dataVencto'] == null ? null : DateTime.tryParse(map['dataVencto']);
+  }
+  SituacaoBoleto getSituacao(){
+    if(dataPagto != null){
+      return SituacaoBoleto.PAGO;
+    }
+    final hoje = today();
+    if(dataVencto!.isBefore(hoje)){
+      return SituacaoBoleto.VENCIDO;
+    }
+    return SituacaoBoleto.ABERTO;
+  }
 }
 
 class Usuario extends BaseEntity {
@@ -121,7 +154,7 @@ class Usuario extends BaseEntity {
   Usuario({String? id, this.nomeUsuario, this.senha, this.perfil, this.morador})
       : super(id: id);
 
-  Usuario.fromMap(Map<String, dynamic> map){
+  Usuario.fromMap(Map<String, dynamic> map) {
     nomeUsuario = map['nomeUsuario'];
     senha = map['senha'];
     perfil = perfilUsuarioFromId(map['perfil']);
@@ -144,6 +177,8 @@ class Sessao {
 }
 
 enum PerfilUsuario { ADMIN, MORADOR }
+
+enum SituacaoBoleto { ABERTO, PAGO, VENCIDO }
 
 int? perfilUsuarioToId(PerfilUsuario? perfil) {
   if (perfil == null) {
@@ -168,6 +203,53 @@ PerfilUsuario? perfilUsuarioFromId(int? id) {
       return PerfilUsuario.ADMIN;
     case 2:
       return PerfilUsuario.MORADOR;
+    default:
+      return null;
+  }
+}
+
+int? situacaoBoletoToId(SituacaoBoleto? sit) {
+  if (sit == null) {
+    return null;
+  }
+  switch (sit) {
+    case SituacaoBoleto.ABERTO:
+      return 1;
+    case SituacaoBoleto.PAGO:
+      return 2;
+    case SituacaoBoleto.VENCIDO:
+      return 3;
+    default:
+      return null;
+  }
+}
+
+SituacaoBoleto? situacaoBoletoFromId(int? id) {
+  if (id == null) {
+    return null;
+  }
+  switch (id) {
+    case 1:
+      return SituacaoBoleto.ABERTO;
+    case 2:
+      return SituacaoBoleto.PAGO;
+    case 3:
+      return SituacaoBoleto.VENCIDO;
+    default:
+      return null;
+  }
+}
+String? situacaoBoletoToStr(SituacaoBoleto? sit) {
+  if (sit == null) {
+    return null;
+  }
+  switch (sit) {
+    case SituacaoBoleto.ABERTO:
+      return 'Aberto';
+    case SituacaoBoleto.PAGO:
+      return 'Pago';
+    case SituacaoBoleto.VENCIDO:
+      return 'Vencido';
     default:
       return null;
   }

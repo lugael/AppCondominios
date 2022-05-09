@@ -1,5 +1,6 @@
 import 'package:app_condominios/model.dart';
 import 'package:app_condominios/server.dart';
+import 'package:app_condominios/utils.dart';
 import 'package:flutter/material.dart';
 
 class TelaMoradores extends StatefulWidget {
@@ -43,12 +44,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
 
   Widget _buildBody() {
     if (_moradores == null) {
-      return Center(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-        CircularProgressIndicator(),
-        Text('Aguarde. Carregando dados...',
-            style: TextStyle(color: Colors.blue.shade800, fontSize: 14.0))
-      ]));
+      return buildWidgetAguarde();
     } else {}
     return ListView.builder(
         padding: EdgeInsets.all(8.0),
