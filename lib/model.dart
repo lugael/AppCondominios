@@ -1,9 +1,5 @@
 import 'package:app_condominios/utils.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-final dd_MM_yyyy = DateFormat("dd/MM/yyyy", "pt-BR");
-final valorFmt = NumberFormat("###,##0.00","pt_BR");
 
 class BaseEntity {
   String? id;

@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+final dd_MM_yyyy = DateFormat("dd/MM/yyyy", "pt-BR");
+final valorFmt = NumberFormat("###,##0.00","pt_BR");
 
 final normalTxtColor = Colors.blue;
 final focusedTxtColor = Colors.orange;

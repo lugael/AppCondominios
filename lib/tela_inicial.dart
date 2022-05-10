@@ -123,7 +123,7 @@ class _TelaInicialState extends State<TelaInicial> {
 
   ListTile _buildTileBoletos() {
     return ListTile(
-        leading: Icon(Icons.picture_as_pdf_rounded),
+        leading: Icon(Icons.assignment_outlined),
         title: Text('Boletos'),
         onTap: _abrirTelaBoletos);
   }
@@ -156,7 +156,7 @@ class _TelaInicialState extends State<TelaInicial> {
 
   void _abrirTelaMoradores() {
     Navigator.pop(context);
-    abrirTela(context, const TelaMoradores());
+    abrirTela(context, TelaMoradores(sessao: _sessao!));
   }
 
   void _abrirTelaBoletos() {

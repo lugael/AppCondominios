@@ -53,20 +53,19 @@ Future<String> _serverPOST(
 
   if (response.statusCode != statusOk) {
     throw response.body;
-    // final Map<String, dynamic> map = json.decode(response.body);
-    // throw map.containsKey('message') ? map['message'] : '';
   }
   return response.body;
 }
 
 Future<List<Morador>> srvGetMoradores(
-    {String? condominioId, String? nome, bool full = false}) async {
+    {String? condominioId, String? nome,String? token, bool full = false}) async {
   String response = await _serverGET(endpoint: 'moradores', params: {
     'condominioId': condominioId,
     'nome': nome,
     'full': full.toString()
-  });
+  }, token: token);
   Iterable list = json.decode(response);
+
   return list.map((m) => Morador.fromMap(m)).toList();
 }
 
@@ -74,6 +73,7 @@ Future<List<Boleto>> srvGetBoletos(
     {required String condominioId,
     String? moradorId,
     SituacaoBoleto? situacao,
+    String? token,
     bool full = false}) async {
   String response = await _serverGET(endpoint: 'boletos', params: {
     'condominioId': condominioId,
@@ -81,7 +81,7 @@ Future<List<Boleto>> srvGetBoletos(
     'situacao':
         situacao == null ? null : situacaoBoletoToId(situacao)?.toString(),
     'full': full.toString()
-  });
+  }, token: token);
   Iterable list = json.decode(response);
   return list.map((m) => Boleto.fromMap(m)).toList();
 }
