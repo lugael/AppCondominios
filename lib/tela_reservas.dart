@@ -117,7 +117,7 @@ class _TelaReservasState extends State<TelaReservas> {
   }
 
   Future<List<Reserva>> _fetchReservas() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 15));
     return await srvGetReservas(
         full: true,
         dataIni: _dataSelecionada,

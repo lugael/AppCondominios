@@ -103,7 +103,7 @@ class _TelaInicialState extends State<TelaInicial> {
       drawerItems.addAll([_buildTileLogin()]);
     } else {
       drawerItems.addAll(
-          [_buildTileMoradores(), _buildTileBoletos(), _buildTileLogoff(), _buildTileReservas()]);
+          [_buildTileMoradores(), _buildTileBoletos(), _buildTileReservas(), _buildTileLogoff()]);
     }
     return Drawer(child: ListView(children: drawerItems));
   }
@@ -129,18 +129,19 @@ class _TelaInicialState extends State<TelaInicial> {
         onTap: _abrirTelaBoletos);
   }
 
-  ListTile _buildTileLogoff() {
-    return ListTile(
-        leading:const Icon(Icons.block_outlined),
-        title:const Text('Efetuar logoff'),
-        onTap: _efetuarLogoff);
-  }
   ListTile _buildTileReservas(){
     return ListTile(
       leading:const Icon(Icons.calendar_today_rounded),
       title:const Text('Reservas'),
       onTap: _abrirTelaEspacos,
     );
+  }
+
+  ListTile _buildTileLogoff() {
+    return ListTile(
+        leading:const Icon(Icons.block_outlined),
+        title:const Text('Efetuar logoff'),
+        onTap: _efetuarLogoff);
   }
 
   void _abrirTelaLogin() {
