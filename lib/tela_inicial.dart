@@ -1,9 +1,9 @@
 import 'package:app_condominios/dao.dart';
 import 'package:app_condominios/model.dart';
 import 'package:app_condominios/tela_boletos.dart';
+import 'package:app_condominios/tela_espacos.dart';
 import 'package:app_condominios/tela_login.dart';
 import 'package:app_condominios/tela_moradores.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_condominios/utils.dart';
 
@@ -34,12 +34,13 @@ class _TelaInicialState extends State<TelaInicial> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
       drawer: _buildDrawer(),
       body: _buildBody(),
     );
   }
+
 
   Widget _buildBody() {
     return Center(
@@ -64,8 +65,8 @@ class _TelaInicialState extends State<TelaInicial> {
                   color: Colors.blue.shade100,
                   borderRadius: BorderRadius.circular(12)),
               child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 20.00),
+                children: const <Widget>[
+                  SizedBox(height: 20.00),
                   Icon(Icons.info_outline_rounded,
                       size: 50, color: Colors.blueAccent),
                   Text('Acesse as funções do app pelo menu lateral.',
@@ -102,37 +103,44 @@ class _TelaInicialState extends State<TelaInicial> {
       drawerItems.addAll([_buildTileLogin()]);
     } else {
       drawerItems.addAll(
-          [_buildTileMoradores(), _buildTileBoletos(), _buildTileLogoff()]);
+          [_buildTileMoradores(), _buildTileBoletos(), _buildTileLogoff(), _buildTileReservas()]);
     }
     return Drawer(child: ListView(children: drawerItems));
   }
 
   ListTile _buildTileMoradores() {
     return ListTile(
-        leading: Icon(Icons.people_alt),
-        title: Text('Lista de moradores'),
+        leading:const Icon(Icons.people_alt),
+        title:const Text('Lista de moradores'),
         onTap: _abrirTelaMoradores);
   }
 
   ListTile _buildTileLogin() {
     return ListTile(
-        leading: Icon(Icons.login),
-        title: Text('Efetuar Login'),
+        leading:const Icon(Icons.login),
+        title:const Text('Efetuar Login'),
         onTap: _abrirTelaLogin);
   }
 
   ListTile _buildTileBoletos() {
     return ListTile(
-        leading: Icon(Icons.assignment_outlined),
-        title: Text('Boletos'),
+        leading:const Icon(Icons.assignment_outlined),
+        title:const Text('Boletos'),
         onTap: _abrirTelaBoletos);
   }
 
   ListTile _buildTileLogoff() {
     return ListTile(
-        leading: Icon(Icons.block_outlined),
-        title: Text('Efetuar logoff'),
+        leading:const Icon(Icons.block_outlined),
+        title:const Text('Efetuar logoff'),
         onTap: _efetuarLogoff);
+  }
+  ListTile _buildTileReservas(){
+    return ListTile(
+      leading:const Icon(Icons.calendar_today_rounded),
+      title:const Text('Reservas'),
+      onTap: _abrirTelaEspacos,
+    );
   }
 
   void _abrirTelaLogin() {
@@ -162,5 +170,10 @@ class _TelaInicialState extends State<TelaInicial> {
   void _abrirTelaBoletos() {
     Navigator.pop(context);
     abrirTela(context, TelaBoletos(sessao: _sessao!));
+  }
+
+  void _abrirTelaEspacos(){
+    Navigator.pop(context);
+    abrirTela(context, TelaEspacos(sessao: _sessao!));
   }
 }

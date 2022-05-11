@@ -8,21 +8,18 @@ class TelaBoletos extends StatefulWidget {
   final Sessao sessao;
 
   @override
-  State<TelaBoletos> createState() => _TelaBoletosState(sessao: sessao);
+  State<TelaBoletos> createState() => _TelaBoletosState();
 }
 
 class _TelaBoletosState extends State<TelaBoletos> {
-  final Sessao sessao;
   SituacaoBoleto? _situacaoFiltrar;
   List<Boleto>? _boletos;
   final List<MenuItem> _opcoes = [
     MenuItem(label: 'Todos', situacao: null),
-    MenuItem(label: 'Abertos', situacao: SituacaoBoleto.ABERTO),
-    MenuItem(label: 'Pagos', situacao: SituacaoBoleto.PAGO),
-    MenuItem(label: 'Vencidos', situacao: SituacaoBoleto.VENCIDO),
+    MenuItem(label: 'Abertos', situacao: SituacaoBoleto.aberto),
+    MenuItem(label: 'Pagos', situacao: SituacaoBoleto.pago),
+    MenuItem(label: 'Vencidos', situacao: SituacaoBoleto.vencido),
   ];
-
-  _TelaBoletosState({required this.sessao});
 
   @override
   void initState() {
@@ -42,16 +39,16 @@ class _TelaBoletosState extends State<TelaBoletos> {
 
   Future<List<Boleto>> _fetchBoletos() async {
     String? moradorId;
-    if (sessao.usuario?.perfil == PerfilUsuario.MORADOR) {
-      moradorId = sessao.usuario?.morador?.id;
+    if (widget.sessao.usuario?.perfil == PerfilUsuario.morador) {
+      moradorId = widget.sessao.usuario?.morador?.id;
     }
-    final condominioId = sessao.usuario!.morador!.condominio!.id!;
+    final condominioId = widget.sessao.usuario!.morador!.condominio!.id!;
     return srvGetBoletos(
         full: true,
         condominioId: condominioId,
         situacao: _situacaoFiltrar,
         moradorId: moradorId,
-        token: sessao.token);
+        token: widget.sessao.token);
   }
 
   @override
@@ -72,9 +69,7 @@ class _TelaBoletosState extends State<TelaBoletos> {
             return _opcoes
                 .map((e) => PopupMenuItem(
                       value: e,
-                      child: Text(e.label),
-                    ))
-                .toList();
+                      child: Text(e.label))).toList();
           })
     ]);
   }
@@ -103,11 +98,11 @@ class _TelaBoletosState extends State<TelaBoletos> {
     final valor = boleto.valorDoc;
     return Card(
         child: ListTile(
-            leading: Icon(Icons.picture_as_pdf_outlined, size: 30.0),
+            leading: const Icon(Icons.picture_as_pdf_outlined, size: 30.0),
             title: Text(boleto.morador?.nome ?? '?',
                 style: TextStyle(color: Colors.grey.shade800, fontSize: 14.0)),
             subtitle:
-                Text('Vencto: ${venc == null ? '?' : dd_MM_yyyy.format(venc)}'),
+                Text('Vencto: ${venc == null ? '?' : ddMMyyyy.format(venc)}'),
             trailing: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -129,11 +124,11 @@ class _TelaBoletosState extends State<TelaBoletos> {
 
   Color getCorSituacao(SituacaoBoleto situacao) {
     switch (situacao) {
-      case SituacaoBoleto.PAGO:
+      case SituacaoBoleto.pago:
         return Colors.green;
-      case SituacaoBoleto.ABERTO:
+      case SituacaoBoleto.aberto:
         return Colors.blue;
-      case SituacaoBoleto.VENCIDO:
+      case SituacaoBoleto.vencido:
         return Colors.red;
     }
   }

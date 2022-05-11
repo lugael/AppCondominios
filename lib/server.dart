@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app_condominios/utils.dart';
 import 'package:app_condominios/model.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 const urlSrv = "tars1.ddns.net:8445";
 const statusOk = 200;
@@ -84,6 +85,39 @@ Future<List<Boleto>> srvGetBoletos(
   }, token: token);
   Iterable list = json.decode(response);
   return list.map((m) => Boleto.fromMap(m)).toList();
+}
+Future<List<Espaco>> srvGetEspacos(
+    {required String condominioId,
+      String? nome,
+      String? token,
+      TipoEspaco? tipo,
+      bool full = false}) async {
+  String response = await _serverGET(endpoint: 'espacos', params: {
+    'condominioId': condominioId,
+    'nome': nome,
+    'tipo': tipoEspacoToId(tipo),
+    'full': full.toString()
+  }, token: token);
+  Iterable list = json.decode(response);
+  return list.map((m) => Espaco.fromMap(m)).toList();
+}
+
+Future<List<Reserva>> srvGetReservas({
+    String? moradorId,
+    String? espacoId,
+    DateTime? dataIni,
+    DateTime? dataFim,
+    String? token,
+  bool full = false}) async{
+  String response = await _serverGET(endpoint: 'reservas', params: {
+    'moradorId': moradorId,
+    'espacoId': espacoId,
+    'dataIni': dataIni == null ? null : yyyyMMdd.format(dataIni),
+    'dataFim': dataFim == null ? null : yyyyMMdd.format(dataFim),
+    'full': full.toString()
+  }, token: token);
+  Iterable list = json.decode(response);
+  return list.map((m) => Reserva.fromMap(m)).toList();
 }
 
 Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async {

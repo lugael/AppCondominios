@@ -8,15 +8,12 @@ class TelaMoradores extends StatefulWidget {
   final Sessao sessao;
 
   @override
-  State<TelaMoradores> createState() => _TelaMoradoresState(sessao: sessao);
+  State<TelaMoradores> createState() => _TelaMoradoresState();
 }
 
 class _TelaMoradoresState extends State<TelaMoradores> {
-  final Sessao sessao;
   List<Morador>? _moradores;
   bool _ordemAsc = false;
-
-  _TelaMoradoresState({required this.sessao});
 
   @override
   void initState() {
@@ -34,7 +31,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
   }
 
   Future<List<Morador>> fetchMoradores() async {
-    return await srvGetMoradores(token: sessao.token);
+    return await srvGetMoradores(token: widget.sessao.token);
   }
 
   @override
@@ -47,15 +44,15 @@ class _TelaMoradoresState extends State<TelaMoradores> {
 
   AppBar _buildAppBar() {
     return AppBar(
-        title: Text('Moradores'),
+        title: const Text('Moradores'),
         actions: _moradores == null
             ? []
             : [
                 IconButton(
-                    onPressed: _ordenar, icon: Icon(Icons.sort_by_alpha)),
+                    onPressed: _ordenar, icon: const Icon(Icons.sort_by_alpha)),
                 IconButton(
                     onPressed: _ordenarPorApto,
-                    icon: Icon(Icons.apartment_outlined))
+                    icon: const Icon(Icons.apartment_outlined))
               ]);
   }
 
@@ -64,7 +61,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
       return buildWidgetAguarde();
     } else {}
     return ListView.builder(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         itemCount: _moradores!.length,
         itemBuilder: (BuildContext context, int index) {
           final morador = _moradores![index];
@@ -77,15 +74,15 @@ class _TelaMoradoresState extends State<TelaMoradores> {
                           radius: 28.0,
                           backgroundImage: NetworkImage(
                               'https://$urlSrv/imagens/${morador.imagemAsset}',
-                              headers: {'token': sessao.token ?? ''})),
+                              headers: {'token': widget.sessao.token ?? ''})),
                       title: Text('${morador.nome}',
                           style: TextStyle(
                               color: Colors.grey.shade800, fontSize: 14.0)),
                       subtitle: Text(
                           morador.nascimento == null
                               ? 'null'
-                              : dd_MM_yyyy.format(morador.nascimento!),
-                          style: TextStyle(color: Colors.grey, fontSize: 14.0)),
+                              : ddMMyyyy.format(morador.nascimento!),
+                          style: const TextStyle(color: Colors.grey, fontSize: 14.0)),
                       trailing: Text('${morador.apto} - ${morador.bloco}'))));
         });
   }

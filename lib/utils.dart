@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-final dd_MM_yyyy = DateFormat("dd/MM/yyyy", "pt-BR");
+
+final ddMMyyyy = DateFormat("dd/MM/yyyy", "pt-BR");
+final yyyyMMdd = DateFormat("yyyy-MM-dd");
 final valorFmt = NumberFormat("###,##0.00","pt_BR");
 
-final normalTxtColor = Colors.blue;
-final focusedTxtColor = Colors.orange;
+const normalTxtColor = Colors.blue;
+const focusedTxtColor = Colors.orange;
 String toMd5(String str){
   return md5.convert(utf8.encode(str)).toString();
 }
@@ -43,7 +45,7 @@ Future<void> showMsg({required BuildContext ctx,required String titulo,required 
 Widget buildWidgetAguarde() {
   return Center(
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        CircularProgressIndicator(),
+        const CircularProgressIndicator(),
         Text('Aguarde. Carregando dados...',
             style: TextStyle(color: Colors.blue.shade800, fontSize: 14.0))
       ]));
