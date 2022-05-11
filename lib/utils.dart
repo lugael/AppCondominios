@@ -50,3 +50,12 @@ Widget buildWidgetAguarde() {
             style: TextStyle(color: Colors.blue.shade800, fontSize: 14.0))
       ]));
 }
+void showSnackBar({required BuildContext ctx, required String data}) {
+  ScaffoldMessenger.of(ctx).showSnackBar(
+      SnackBar(
+          backgroundColor: Colors.yellow,
+          content: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(data, style: TextStyle(color: Colors.black),),
+          )));
+}

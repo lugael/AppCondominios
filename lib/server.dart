@@ -58,6 +58,22 @@ Future<String> _serverPOST(
   return response.body;
 }
 
+Future<String> _serverDelete({required String endpoint,  String? token}) async {
+
+  final url = Uri.https(urlSrv, endpoint);
+  final headers = token != null ? {'token': token} : null;
+
+  final response = await http.delete(url, headers: headers);
+  final responseBody = utf8.decode(response.bodyBytes);
+
+  if (response.statusCode != statusOk) {
+    throw responseBody;
+    // final Map<String, dynamic> map = json.decode(responseBody);
+    // throw map.containsKey('message') ? map['message'] : '';
+  }
+  return responseBody;
+}
+
 Future<List<Morador>> srvGetMoradores(
     {String? condominioId, String? nome,String? token, bool full = false}) async {
   String response = await _serverGET(endpoint: 'moradores', params: {
@@ -119,7 +135,7 @@ Future<List<Reserva>> srvGetReservas({
   Iterable list = json.decode(response);
   return list.map((m) => Reserva.fromMap(m)).toList();
 }
-
+//Post--------------------------------------------------------------------------
 Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async {
   final strObjLogin =
       json.encode({'nomeUsuario': nomeUsuario, 'senha': toMd5(senha)});
@@ -127,4 +143,11 @@ Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async {
 
   Map<String, dynamic> mapSessao = json.decode(response);
   return Sessao.fromMap(mapSessao);
+}
+
+Future<Reserva> srvPostReserva(Reserva reserva, String? token)async{
+  final body = json.encode(reserva.toMap());
+  String response = await _serverPOST(endpoint: 'reservas', body: body, token: token);
+
+  return Reserva.fromMap(json.decode(response));
 }

@@ -269,13 +269,31 @@ class Reserva extends BaseEntity {
 
   Reserva.fromMap(Map<String, dynamic> map) : super.fromMap(map){
     data = map['data'] == null ? null : DateTime.tryParse(map['data']);
-    periodo = periodoToId(map['periodo']);
+    periodo = idToPeriodo(map['periodo']);
     espaco = map['espaco'] == null ? null : Espaco.fromMap(map['espaco']);
     morador = map['morador'] == null ? null : Morador.fromMap(map['morador']);
   }
+
+  Map<String, dynamic> toMap(){
+    return{
+      'id': id,
+      'data': data == null ? null : yyyyMMdd.format(data!),
+      'periodo': periodoToId(periodo),
+      'espaco':{
+        'id': espaco?.id
+      },
+      'morador': {
+        'id': morador?.id
+      },
+    };
+  }
+  @override
+  String toString(){
+    return toMap().toString();
+  }
 }
 enum Periodo { manha, tarde, noite }
-Periodo? periodoToId(int? id) {
+Periodo? idToPeriodo(int? id) {
   if (id == null) {
     return null;
   }
@@ -289,7 +307,7 @@ Periodo? periodoToId(int? id) {
   }
 }
 
-int? idToPeriodo(Periodo? periodo) {
+int? periodoToId(Periodo? periodo) {
   if (periodo == null) {
     return null;
   }
