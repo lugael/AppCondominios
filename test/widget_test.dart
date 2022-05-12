@@ -1,30 +1,49 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'dart:io';
+import 'package:app_condominios/model.dart';
+import 'package:app_condominios/server.dart';
+import 'package:app_condominios/tela_moradores.dart';
+import 'package:app_condominios/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:app_condominios/main.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const AppCondominio());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  setUpAll((){
+      initialize();
   });
+  testWidgets('Teste moradores', (WidgetTester tester) async {
+    Sessao sessao = _criarSessao();
+    Widget widget = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(home: TelaMoradores(sessao: sessao)));
+
+    await tester.pumpWidget(widget);
+
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+
+    var lista = tester.widgetList<ListTile>(find.byType(ListTile));
+
+    expect((lista.elementAt(0).title as Text).data, 'Bob Marley');
+    expect((lista.elementAt(0).trailing as Text).data, '902-A');
+
+    expect((lista.elementAt(1).title as Text).data, 'Bobdy Lan');
+    expect((lista.elementAt(1).trailing as Text).data, '803-C');
+
+    expect((lista.elementAt(2).title as Text).data, 'Bon Jovi');
+    expect((lista.elementAt(2).trailing as Text).data, '701-E');
+  });
+}
+
+Sessao _criarSessao() => Sessao(
+    inicio: DateTime.now(),
+    usuario: Usuario(
+        perfil: PerfilUsuario.morador,
+        nomeUsuario: 'luis',
+        id: const Uuid().v4(),
+        morador: Morador(id: const Uuid().v4(), nome: 'Ozzy Osburne')));
+
+void initialize() {
+  modoTeste = true;
+  initializeDateFormatting('pt_BR');
 }

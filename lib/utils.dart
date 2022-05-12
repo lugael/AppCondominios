@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 final ddMMyyyy = DateFormat("dd/MM/yyyy", "pt-BR");
 final yyyyMMdd = DateFormat("yyyy-MM-dd");
 final valorFmt = NumberFormat("###,##0.00", "pt_BR");
+bool modoTeste = false;
 
 const normalTxtColor = Colors.blue;
 const focusedTxtColor = Colors.orange;

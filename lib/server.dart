@@ -161,6 +161,10 @@ Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async {
   return Sessao.fromMap(mapSessao);
 }
 
+Future<void> srvPostLogoff({String? token}) async{
+  _serverPOST(endpoint: 'logoff', body: '', token: token);
+}
+
 Future<Reserva> srvPostReserva(Reserva reserva, String? token) async {
   final body = json.encode(reserva.toMap());
   String response =

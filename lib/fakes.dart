@@ -18,16 +18,16 @@ List<Morador> fakeMoradores(){
         nome: 'Bobdy Lan',
         nascimento: DateTime(2000,04,16),
         condominio: _condominioPremiatto,
-        bloco: 'A',
-        apto: 902,
+        bloco: 'C',
+        apto: 803,
         cpf: '123.123.123-04',
         imagemAsset: 'bobdylan.jpg'
     ),Morador(
         nome: 'Bon Jovi',
         nascimento: DateTime(2000,04,16),
         condominio: _condominioPremiatto,
-        bloco: 'A',
-        apto: 902,
+        bloco: 'E',
+        apto: 701,
         cpf: '123.123.123-04',
         imagemAsset: 'bonjovi.jpg'
     ),Morador(

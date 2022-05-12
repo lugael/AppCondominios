@@ -1,3 +1,4 @@
+import 'package:app_condominios/fakes.dart';
 import 'package:app_condominios/model.dart';
 import 'package:app_condominios/server.dart';
 import 'package:app_condominios/utils.dart';
@@ -18,16 +19,20 @@ class _TelaMoradoresState extends State<TelaMoradores> {
   @override
   void initState() {
     super.initState();
-    fetchMoradores().then((lista) {
-      setState(() {
-        _moradores = lista;
+    if (modoTeste) {
+      _moradores = fakeMoradores();
+    } else {
+      fetchMoradores().then((lista) {
+        setState(() {
+          _moradores = lista;
+        });
+      }, onError: (ex) {
+        showMsg(
+            ctx: context,
+            titulo: 'Não foi possível consultar',
+            mensagem: ex.toString());
       });
-    }, onError: (ex) {
-      showMsg(
-          ctx: context,
-          titulo: 'Não foi possível consultar',
-          mensagem: ex.toString());
-    });
+    }
   }
 
   Future<List<Morador>> fetchMoradores() async {
@@ -72,9 +77,7 @@ class _TelaMoradoresState extends State<TelaMoradores> {
                   child: ListTile(
                       leading: CircleAvatar(
                           radius: 28.0,
-                          backgroundImage: NetworkImage(
-                              'https://$urlSrv/imagens/${morador.imagemAsset}',
-                              headers: {'token': widget.sessao.token ?? ''})),
+                          backgroundImage: _buildImagemMorador(morador)),
                       title: Text('${morador.nome}',
                           style: TextStyle(
                               color: Colors.grey.shade800, fontSize: 14.0)),
@@ -82,9 +85,18 @@ class _TelaMoradoresState extends State<TelaMoradores> {
                           morador.nascimento == null
                               ? 'null'
                               : ddMMyyyy.format(morador.nascimento!),
-                          style: const TextStyle(color: Colors.grey, fontSize: 14.0)),
-                      trailing: Text('${morador.apto} - ${morador.bloco}'))));
+                          style: const TextStyle(
+                              color: Colors.grey, fontSize: 14.0)),
+                      trailing: Text('${morador.apto}-${morador.bloco}'))));
         });
+  }
+
+  ImageProvider _buildImagemMorador(Morador morador) {
+    if(modoTeste){
+      return AssetImage('assets/${morador.imagemAsset}');
+    }
+    return NetworkImage('https://$urlSrv/imagens/${morador.imagemAsset}',
+        headers: {'token': widget.sessao.token ?? ''});
   }
 
   void _ordenar() {

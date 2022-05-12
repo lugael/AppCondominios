@@ -1,5 +1,6 @@
 import 'package:app_condominios/dao.dart';
 import 'package:app_condominios/model.dart';
+import 'package:app_condominios/server.dart';
 import 'package:app_condominios/tela_boletos.dart';
 import 'package:app_condominios/tela_espacos.dart';
 import 'package:app_condominios/tela_login.dart';
@@ -160,7 +161,15 @@ class _TelaInicialState extends State<TelaInicial> {
 
   void _efetuarLogoff() async {
     Navigator.pop(context);
-    await DAO.get().deleteSessao();
+    srvPostLogoff(token: _sessao?.token).then((value) async{
+      await _limparSessao();
+    }, onError: (ex) async {
+      await _limparSessao();
+    });
+  }
+
+  Future<void> _limparSessao() async {
+     await DAO.get().deleteSessao();
     setState(() {
       _sessao = null;
     });
