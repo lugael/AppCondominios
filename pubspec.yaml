@@ -39,6 +39,7 @@ dependencies:
   crypto: ^3.0.1
   table_calendar: ^3.0.5
   package_info_plus: ^1.4.2
+  age_calculator : ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:age_calculator/age_calculator.dart';
 import 'package:app_condominios/utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -60,6 +61,13 @@ class Morador extends BaseEntity {
   static int compararNomeDesc(Morador a, Morador b) {
     return (b.nome?.toLowerCase() ?? '').compareTo(a.nome?.toLowerCase() ?? '');
   }
+
+  int? getIdade(){
+    if(nascimento == null){
+      return null;
+    }
+    return AgeCalculator.age(nascimento!).years;
+  }
 }
 //Condominio -------------------------------------------------------------------
 class Condominio extends BaseEntity {
@@ -80,6 +88,16 @@ class Condominio extends BaseEntity {
     cidade = map['cidade'];
     uf = map['uf'];
   }
+  Map<String, dynamic> toMap(){
+    return{
+      'id': id,
+      'nome': nome,
+      'endereco': endereco,
+      'bairro': bairro,
+      'cidade': cidade,
+      'uf': uf
+    };
+  }
 }
 //Boleto-----------------------------------------------------------------------
 class Boleto extends BaseEntity {
@@ -96,7 +114,8 @@ class Boleto extends BaseEntity {
   DateTime? dataPagto;
   double? valorPago;
 
-  Boleto(String? id,
+  Boleto(
+      {String? id,
       this.morador,
       this.dataRef,
       this.dataEmissao,
@@ -108,7 +127,7 @@ class Boleto extends BaseEntity {
       this.valorMulta,
       this.valorFinal,
       this.dataPagto,
-      this.valorPago)
+      this.valorPago})
       : super(id: id);
 
   Boleto.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
