@@ -2,7 +2,6 @@ import 'package:app_condominios/model.dart';
 import 'package:app_condominios/server.dart';
 import 'package:app_condominios/tela_reservas.dart';
 import 'package:app_condominios/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TelaEspacos extends StatefulWidget {
@@ -96,7 +95,7 @@ class _TelaEspacosState extends State<TelaEspacos> {
     final espaco = _espacos![index];
     return Card(
       child: ListTile(
-        leading: espaco == null ? null : Icon(_tipoIcon(espaco.tipo!)),
+        leading: Icon(_tipoIcon(espaco.tipo!)),
         title: Text(espaco.nome ?? '?'),
         onTap: () => _abrirTela(espaco),
       ),

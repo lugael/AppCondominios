@@ -51,7 +51,7 @@ class _TelaReservasState extends State<TelaReservas> {
         children: [
           Icon(Icons.info_outline, size: 60.0, color: Colors.blue.shade400),
           const SizedBox(height: 10.0),
-          Text('Selecione uma data \npara ver as reservas.',
+          const Text('Selecione uma data \npara ver as reservas.',
               style: TextStyle(fontSize: 20.0))
         ]);
   }
@@ -88,12 +88,13 @@ class _TelaReservasState extends State<TelaReservas> {
         reserva.morador?.id != widget.sessao.usuario?.morador?.id) {
       return null;
     }
+    if (reserva.data != null && reserva.data!.isBefore(hoje)) {
+      return null;
+    }
     return IconButton(
-        onPressed: _onRemoverReserva,
-        icon: Icon(Icons.delete_outline, color: Colors.grey.shade500));
+        onPressed: () => _onRemoverReserva(reserva),
+        icon: const Icon(Icons.delete_outline, color: Colors.red, size: 26.0));
   }
-
-
 
   Widget _buildTrailingSemReserva() {
     if (_dataSelecionada!.isBefore(hoje)) {
@@ -168,6 +169,18 @@ class _TelaReservasState extends State<TelaReservas> {
           mensagem: 'Falta os dados do morador na sessão de usuario');
       return;
     }
+    confirme(
+            ctx: context,
+            mensagem:
+                'Você deseja reservar o espaco ${widget.espaco.nome} no dia ${ddMMyyyy.format(_dataSelecionada!)} no periodo da ${periodoToStr(periodo)}?')
+        .then((value) {
+          if(value){
+              _efetivarNovaReserva(periodo, sessao);
+          }
+    });
+  }
+
+  void _efetivarNovaReserva(Periodo periodo, Sessao sessao) {
     Reserva reserva = Reserva(
         data: _dataSelecionada,
         espaco: widget.espaco,
@@ -176,10 +189,7 @@ class _TelaReservasState extends State<TelaReservas> {
 
     srvPostReserva(reserva, sessao.token).then((value) {
       _mostrarSnackBarReservaPostada();
-      setState(() {
-        _reservas = null;
-        _carregarReservas();
-      });
+      reCarregarReserva();
     }, onError: (ex) {
       showMsg(
           ctx: context,
@@ -188,12 +198,41 @@ class _TelaReservasState extends State<TelaReservas> {
     });
   }
 
+  void reCarregarReserva() {
+    setState(() {
+      _reservas = null;
+      _carregarReservas();
+    });
+  }
+
   void _mostrarSnackBarReservaPostada() {
-    const data = 'Reserva postada com sucesso!';
+    const data = 'Reservado com sucesso!';
     var ctx = context;
     showSnackBar(ctx: ctx, data: data);
   }
-  void _onRemoverReserva(){
 
+  void _onRemoverReserva(Reserva reserva) {
+    if (reserva.id == null) {
+      showMsg(
+          ctx: context,
+          titulo: 'Reserva sem ID',
+          mensagem: 'Não e possivel remover a reserva pois ela está sem ID');
+      return;
+    }
+    confirme(ctx: context, mensagem: 'Deseja cancelar esta reserva?')
+        .then((value) {
+      if (value) {
+        srvDeleteReserva(reservaId: reserva.id!, token: widget.sessao.token)
+            .then((value) {
+          showSnackBar(ctx: context, data: 'Reserva removida!');
+          reCarregarReserva();
+        }, onError: (ex) {
+          showMsg(
+              ctx: context,
+              titulo: 'não foi possivel remover',
+              mensagem: ex.toString());
+        });
+      }
+    });
   }
 }

@@ -12,10 +12,10 @@ class TelaLogin extends StatefulWidget {
 }
 
 class _StateTelaLogin extends State<TelaLogin> {
-  TextEditingController _loginControler = TextEditingController();
-  TextEditingController _senhaControler = TextEditingController();
-  FocusNode _loginFocus = FocusNode();
-  FocusNode _senhaFocus = FocusNode();
+  final TextEditingController _loginControler = TextEditingController();
+  final TextEditingController _senhaControler = TextEditingController();
+  final FocusNode _loginFocus = FocusNode();
+  final FocusNode _senhaFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +64,9 @@ class _StateTelaLogin extends State<TelaLogin> {
         hintText: hint,
         helperStyle: const TextStyle(fontSize: 12.0, color: Colors.grey),
         hintStyle: const TextStyle(fontSize: 20.0, color: Colors.grey),
-        enabledBorder:
-            UnderlineInputBorder(borderSide: BorderSide(color: normalTxtColor)),
-        focusedBorder: UnderlineInputBorder(
+        enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: normalTxtColor)),
+        focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: focusedTxtColor, width: 2.0)),
         icon: Icon(icon, color: Colors.blue));
   }
@@ -75,15 +75,13 @@ class _StateTelaLogin extends State<TelaLogin> {
     final login = _loginControler.text;
     final senha = _senhaControler.text;
     srvPostLogin(login, senha).then((Sessao sessao) async {
-      print('Login Efetuado');
       await DAO.get().saveSessao(sessao);
       Navigator.pop(context);
     }, onError: (ex) {
-      print('Ocorreu um erro durante o login:$ex');
-      
-      showMsg(ctx: context,titulo: 'Não foi possivel efetuar login', mensagem: ex.toString());
+      showMsg(
+          ctx: context,
+          titulo: 'Não foi possivel efetuar login',
+          mensagem: ex.toString());
     });
   }
-
-
 }

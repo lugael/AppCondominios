@@ -304,6 +304,8 @@ Periodo? idToPeriodo(int? id) {
       return Periodo.tarde;
     case 3:
       return Periodo.noite;
+    default:
+      return null;
   }
 }
 

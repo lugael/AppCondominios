@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:app_condominios/utils.dart';
 import 'package:app_condominios/model.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 const urlSrv = "tars1.ddns.net:8445";
 const statusOk = 200;
@@ -58,9 +57,9 @@ Future<String> _serverPOST(
   return response.body;
 }
 
-Future<String> _serverDelete({required String endpoint,  String? token}) async {
-
-  final url = Uri.https(urlSrv, endpoint);
+Future<String> _serverDelete(
+    {required String endpoint, required String id, String? token}) async {
+  final url = Uri.https(urlSrv, '$endpoint/$id');
   final headers = token != null ? {'token': token} : null;
 
   final response = await http.delete(url, headers: headers);
@@ -75,12 +74,18 @@ Future<String> _serverDelete({required String endpoint,  String? token}) async {
 }
 
 Future<List<Morador>> srvGetMoradores(
-    {String? condominioId, String? nome,String? token, bool full = false}) async {
-  String response = await _serverGET(endpoint: 'moradores', params: {
-    'condominioId': condominioId,
-    'nome': nome,
-    'full': full.toString()
-  }, token: token);
+    {String? condominioId,
+    String? nome,
+    String? token,
+    bool full = false}) async {
+  String response = await _serverGET(
+      endpoint: 'moradores',
+      params: {
+        'condominioId': condominioId,
+        'nome': nome,
+        'full': full.toString()
+      },
+      token: token);
   Iterable list = json.decode(response);
 
   return list.map((m) => Morador.fromMap(m)).toList();
@@ -92,49 +97,60 @@ Future<List<Boleto>> srvGetBoletos(
     SituacaoBoleto? situacao,
     String? token,
     bool full = false}) async {
-  String response = await _serverGET(endpoint: 'boletos', params: {
-    'condominioId': condominioId,
-    'moradorId': moradorId,
-    'situacao':
-        situacao == null ? null : situacaoBoletoToId(situacao)?.toString(),
-    'full': full.toString()
-  }, token: token);
+  String response = await _serverGET(
+      endpoint: 'boletos',
+      params: {
+        'condominioId': condominioId,
+        'moradorId': moradorId,
+        'situacao':
+            situacao == null ? null : situacaoBoletoToId(situacao)?.toString(),
+        'full': full.toString()
+      },
+      token: token);
   Iterable list = json.decode(response);
   return list.map((m) => Boleto.fromMap(m)).toList();
 }
+
 Future<List<Espaco>> srvGetEspacos(
     {required String condominioId,
-      String? nome,
-      String? token,
-      TipoEspaco? tipo,
-      bool full = false}) async {
-  String response = await _serverGET(endpoint: 'espacos', params: {
-    'condominioId': condominioId,
-    'nome': nome,
-    'tipo': tipoEspacoToId(tipo),
-    'full': full.toString()
-  }, token: token);
+    String? nome,
+    String? token,
+    TipoEspaco? tipo,
+    bool full = false}) async {
+  String response = await _serverGET(
+      endpoint: 'espacos',
+      params: {
+        'condominioId': condominioId,
+        'nome': nome,
+        'tipo': tipoEspacoToId(tipo),
+        'full': full.toString()
+      },
+      token: token);
   Iterable list = json.decode(response);
   return list.map((m) => Espaco.fromMap(m)).toList();
 }
 
-Future<List<Reserva>> srvGetReservas({
-    String? moradorId,
+Future<List<Reserva>> srvGetReservas(
+    {String? moradorId,
     String? espacoId,
     DateTime? dataIni,
     DateTime? dataFim,
     String? token,
-  bool full = false}) async{
-  String response = await _serverGET(endpoint: 'reservas', params: {
-    'moradorId': moradorId,
-    'espacoId': espacoId,
-    'dataIni': dataIni == null ? null : yyyyMMdd.format(dataIni),
-    'dataFim': dataFim == null ? null : yyyyMMdd.format(dataFim),
-    'full': full.toString()
-  }, token: token);
+    bool full = false}) async {
+  String response = await _serverGET(
+      endpoint: 'reservas',
+      params: {
+        'moradorId': moradorId,
+        'espacoId': espacoId,
+        'dataIni': dataIni == null ? null : yyyyMMdd.format(dataIni),
+        'dataFim': dataFim == null ? null : yyyyMMdd.format(dataFim),
+        'full': full.toString()
+      },
+      token: token);
   Iterable list = json.decode(response);
   return list.map((m) => Reserva.fromMap(m)).toList();
 }
+
 //Post--------------------------------------------------------------------------
 Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async {
   final strObjLogin =
@@ -145,9 +161,15 @@ Future<Sessao> srvPostLogin(String nomeUsuario, String senha) async {
   return Sessao.fromMap(mapSessao);
 }
 
-Future<Reserva> srvPostReserva(Reserva reserva, String? token)async{
+Future<Reserva> srvPostReserva(Reserva reserva, String? token) async {
   final body = json.encode(reserva.toMap());
-  String response = await _serverPOST(endpoint: 'reservas', body: body, token: token);
+  String response =
+      await _serverPOST(endpoint: 'reservas', body: body, token: token);
 
   return Reserva.fromMap(json.decode(response));
+}
+
+Future<void> srvDeleteReserva(
+    {required String reservaId, String? token}) async {
+  await _serverDelete(endpoint: 'reservas', token: token, id: reservaId);
 }

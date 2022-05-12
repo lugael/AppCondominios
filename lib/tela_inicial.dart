@@ -4,6 +4,7 @@ import 'package:app_condominios/tela_boletos.dart';
 import 'package:app_condominios/tela_espacos.dart';
 import 'package:app_condominios/tela_login.dart';
 import 'package:app_condominios/tela_moradores.dart';
+import 'package:app_condominios/tela_sobre.dart';
 import 'package:flutter/material.dart';
 import 'package:app_condominios/utils.dart';
 
@@ -33,60 +34,49 @@ class _TelaInicialState extends State<TelaInicial> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
+      appBar: AppBar(title: const Text('Home')),
       drawer: _buildDrawer(),
       body: _buildBody(),
     );
   }
 
-
   Widget _buildBody() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/logomarca.png'),
-            const SizedBox(height: 20.0),
-            Text('Seja bem-vindo(a) ao app para controle de condomínios!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20.0),
-            Container(
-              width: 240,
-              height: 120,
-              decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(12)),
-              child: Column(
-                children: const <Widget>[
-                  SizedBox(height: 20.00),
-                  Icon(Icons.info_outline_rounded,
-                      size: 50, color: Colors.blueAccent),
-                  Text('Acesse as funções do app pelo menu lateral.',
+        child: Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset('assets/logomarca.png'),
+                  const SizedBox(height: 20.0),
+                  Text('Seja bem-vindo(a) ao app para controle de condomínios!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold))
-                ],
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            Text(
-              'Powered by (Luis) @ Proway',
-              style: TextStyle(color: Colors.grey.shade400),
-            )
-          ],
-        ),
-      ),
-    );
+                          color: Colors.grey.shade700,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20.0),
+                  Container(
+                      width: 240,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Column(children: const <Widget>[
+                        SizedBox(height: 20.00),
+                        Icon(Icons.info_outline_rounded,
+                            size: 50, color: Colors.blueAccent),
+                        Text('Acesse as funções do app pelo menu lateral.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.blueAccent,
+                                fontWeight: FontWeight.bold))
+                      ])),
+                  const SizedBox(height: 20.0),
+                  Text('Powered by (Luis) @ Proway',
+                      style: TextStyle(color: Colors.grey.shade400))
+                ])));
   }
 
   Drawer _buildDrawer() {
@@ -100,47 +90,60 @@ class _TelaInicialState extends State<TelaInicial> {
               : (_sessao!.usuario?.morador?.nome ?? '?'))),
     ];
     if (_sessao == null) {
-      drawerItems.addAll([_buildTileLogin()]);
+      drawerItems.addAll([_buildTileLogin(), _buildTileSobre()]);
     } else {
-      drawerItems.addAll(
-          [_buildTileMoradores(), _buildTileBoletos(), _buildTileReservas(), _buildTileLogoff()]);
+      drawerItems.addAll([
+        _buildTileMoradores(),
+        _buildTileBoletos(),
+        _buildTileReservas(),
+        _buildTileSobre(),
+        _buildTileLogoff()
+      ]);
     }
     return Drawer(child: ListView(children: drawerItems));
   }
 
   ListTile _buildTileMoradores() {
     return ListTile(
-        leading:const Icon(Icons.people_alt),
-        title:const Text('Lista de moradores'),
+        leading: const Icon(Icons.people_alt),
+        title: const Text('Lista de moradores'),
         onTap: _abrirTelaMoradores);
   }
 
   ListTile _buildTileLogin() {
     return ListTile(
-        leading:const Icon(Icons.login),
-        title:const Text('Efetuar Login'),
+        leading: const Icon(Icons.login),
+        title: const Text('Efetuar Login'),
         onTap: _abrirTelaLogin);
   }
 
   ListTile _buildTileBoletos() {
     return ListTile(
-        leading:const Icon(Icons.assignment_outlined),
-        title:const Text('Boletos'),
+        leading: const Icon(Icons.assignment_outlined),
+        title: const Text('Boletos'),
         onTap: _abrirTelaBoletos);
   }
 
-  ListTile _buildTileReservas(){
+  ListTile _buildTileReservas() {
     return ListTile(
-      leading:const Icon(Icons.calendar_today_rounded),
-      title:const Text('Reservas'),
+      leading: const Icon(Icons.calendar_today_rounded),
+      title: const Text('Reservas'),
       onTap: _abrirTelaEspacos,
+    );
+  }
+
+  ListTile _buildTileSobre() {
+    return ListTile(
+      leading: const Icon(Icons.info_outline),
+      title: const Text('Sobre'),
+      onTap: _abrirTelaSobre,
     );
   }
 
   ListTile _buildTileLogoff() {
     return ListTile(
-        leading:const Icon(Icons.block_outlined),
-        title:const Text('Efetuar logoff'),
+        leading: const Icon(Icons.block_outlined),
+        title: const Text('Efetuar logoff'),
         onTap: _efetuarLogoff);
   }
 
@@ -173,8 +176,13 @@ class _TelaInicialState extends State<TelaInicial> {
     abrirTela(context, TelaBoletos(sessao: _sessao!));
   }
 
-  void _abrirTelaEspacos(){
+  void _abrirTelaEspacos() {
     Navigator.pop(context);
     abrirTela(context, TelaEspacos(sessao: _sessao!));
+  }
+
+  void _abrirTelaSobre() {
+    Navigator.pop(context);
+    abrirTela(context, const TelaSobre());
   }
 }

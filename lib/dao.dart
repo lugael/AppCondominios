@@ -37,7 +37,6 @@ class DAO {
   }
 
   Future _createDB(Database db, int version) async {
-    print("Criando Banco de dados");
     await _upgradeDB(db, 0, version);
   }
 

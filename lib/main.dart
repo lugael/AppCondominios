@@ -18,6 +18,7 @@ class AppCondominio extends StatelessWidget {
       title: 'App Condominios',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
         primarySwatch: Colors.blue,
       ),
       home: const TelaInicial(),
