@@ -1,6 +1,4 @@
-import 'package:app_condominios/fakes.dart';
 import 'package:app_condominios/model.dart';
-import 'package:app_condominios/server.dart';
 import 'package:app_condominios/server_online.dart';
 import 'package:app_condominios/utils.dart';
 import 'package:flutter/material.dart';

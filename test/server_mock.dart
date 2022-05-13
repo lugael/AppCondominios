@@ -1,4 +1,4 @@
-import 'package:app_condominios/fakes.dart';
+import 'fakes.dart';
 import 'package:app_condominios/server.dart';
 import 'package:app_condominios/model.dart';
 import 'package:flutter/material.dart';

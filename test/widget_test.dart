@@ -1,23 +1,26 @@
-import 'dart:io';
 import 'package:app_condominios/model.dart';
-import 'package:app_condominios/server.dart';
-import 'package:app_condominios/server_mock.dart';
+import 'server_mock.dart';
 import 'package:app_condominios/tela_moradores.dart';
 import 'package:app_condominios/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:uuid/uuid.dart';
-
+Sessao? _sessao;
 void main() {
-  setUpAll((){
-      initialize();
+  setUpAll(() async{
+    server = ServerMock();
+    initializeDateFormatting('pt_BR');
+      _sessao = await server.srvPostLogin('samuel', 'cun123');
   });
+
+  tearDownAll(() async {
+    await server.srvPostLogoff(token: _sessao!.token);
+  });
+
   testWidgets('Teste moradores', (WidgetTester tester) async {
-    Sessao sessao = _criarSessao();
     Widget widget = MediaQuery(
         data: const MediaQueryData(),
-        child: MaterialApp(home: TelaMoradores(sessao: sessao)));
+        child: MaterialApp(home: TelaMoradores(sessao: _sessao!)));
 
     await tester.pumpWidget(widget);
 
@@ -41,17 +44,4 @@ void main() {
     expect((lista.elementAt(0).title as Text).data, 'Taylor');
     expect((lista.elementAt(0).trailing as Text).data, '30-H');
   });
-}
-
-Sessao _criarSessao() => Sessao(
-    inicio: DateTime.now(),
-    usuario: Usuario(
-        perfil: PerfilUsuario.morador,
-        nomeUsuario: 'luis',
-        id: const Uuid().v4(),
-        morador: Morador(id: const Uuid().v4(), nome: 'Ozzy Osburne')));
-
-void initialize() {
-  server = ServerMock();
-  initializeDateFormatting('pt_BR');
 }
