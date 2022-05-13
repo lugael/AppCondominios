@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app_condominios/model.dart';
 import 'package:app_condominios/server.dart';
+import 'package:app_condominios/server_mock.dart';
 import 'package:app_condominios/tela_moradores.dart';
 import 'package:app_condominios/utils.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,13 @@ void main() {
 
     expect((lista.elementAt(2).title as Text).data, 'Bon Jovi');
     expect((lista.elementAt(2).trailing as Text).data, '701-E');
+    await tester.tap(find.byIcon(Icons.sort_by_alpha));
+    await tester.tap(find.byIcon(Icons.sort_by_alpha));
+    await tester.pumpAndSettle();
+
+    lista = tester.widgetList<ListTile>(find.byType(ListTile));
+    expect((lista.elementAt(0).title as Text).data, 'Taylor');
+    expect((lista.elementAt(0).trailing as Text).data, '30-H');
   });
 }
 
@@ -44,6 +52,6 @@ Sessao _criarSessao() => Sessao(
         morador: Morador(id: const Uuid().v4(), nome: 'Ozzy Osburne')));
 
 void initialize() {
-  modoTeste = true;
+  server = ServerMock();
   initializeDateFormatting('pt_BR');
 }

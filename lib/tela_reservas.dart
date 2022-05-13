@@ -152,7 +152,7 @@ class _TelaReservasState extends State<TelaReservas> {
   }
 
   Future<List<Reserva>> _fetchReservas() async {
-    return await srvGetReservas(
+    return await server.srvGetReservas(
         full: true,
         dataIni: _dataSelecionada,
         dataFim: _dataSelecionada,
@@ -183,11 +183,12 @@ class _TelaReservasState extends State<TelaReservas> {
   void _efetivarNovaReserva(Periodo periodo, Sessao sessao) {
     Reserva reserva = Reserva(
         data: _dataSelecionada,
+
         espaco: widget.espaco,
         periodo: periodo,
         morador: sessao.usuario!.morador!);
 
-    srvPostReserva(reserva, sessao.token).then((value) {
+    server.srvPostReserva(reserva, sessao.token).then((value) {
       _mostrarSnackBarReservaPostada();
       reCarregarReserva();
     }, onError: (ex) {
@@ -222,7 +223,7 @@ class _TelaReservasState extends State<TelaReservas> {
     confirme(ctx: context, mensagem: 'Deseja cancelar esta reserva?')
         .then((value) {
       if (value) {
-        srvDeleteReserva(reservaId: reserva.id!, token: widget.sessao.token)
+        server.srvDeleteReserva(reservaId: reserva.id!, token: widget.sessao.token)
             .then((value) {
           showSnackBar(ctx: context, data: 'Reserva removida!');
           reCarregarReserva();

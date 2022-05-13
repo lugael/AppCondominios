@@ -48,7 +48,7 @@ class _TelaEspacosState extends State<TelaEspacos> {
 
   Future<List<Espaco>> _fetchEspacos() async {
     final condominioId = widget.sessao.usuario!.morador!.condominio!.id!;
-    return srvGetEspacos(
+    return server.srvGetEspacos(
         full: true,
         tipo: _tipoEspaco,
         condominioId: condominioId,

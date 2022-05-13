@@ -161,7 +161,7 @@ class _TelaInicialState extends State<TelaInicial> {
 
   void _efetuarLogoff() async {
     Navigator.pop(context);
-    srvPostLogoff(token: _sessao?.token).then((value) async{
+    server.srvPostLogoff(token: _sessao?.token).then((value) async{
       await _limparSessao();
     }, onError: (ex) async {
       await _limparSessao();

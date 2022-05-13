@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app_condominios/server.dart';
+import 'package:app_condominios/server_online.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,8 @@ import 'package:intl/intl.dart';
 final ddMMyyyy = DateFormat("dd/MM/yyyy", "pt-BR");
 final yyyyMMdd = DateFormat("yyyy-MM-dd");
 final valorFmt = NumberFormat("###,##0.00", "pt_BR");
-bool modoTeste = false;
+
+Server server = ServerOline();
 
 const normalTxtColor = Colors.blue;
 const focusedTxtColor = Colors.orange;

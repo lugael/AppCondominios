@@ -114,8 +114,8 @@ List<Morador> fakeMoradores(){
         nome: 'Taylor',
         nascimento: DateTime(2000,04,16),
         condominio: _condominioPremiatto,
-        bloco: 'A',
-        apto: 902,
+        bloco: 'H',
+        apto: 30,
         cpf: '123.123.123-04',
         imagemAsset: 'taylor.jpg'
     )

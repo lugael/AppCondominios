@@ -1,6 +1,7 @@
 import 'package:app_condominios/fakes.dart';
 import 'package:app_condominios/model.dart';
 import 'package:app_condominios/server.dart';
+import 'package:app_condominios/server_online.dart';
 import 'package:app_condominios/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -19,24 +20,20 @@ class _TelaMoradoresState extends State<TelaMoradores> {
   @override
   void initState() {
     super.initState();
-    if (modoTeste) {
-      _moradores = fakeMoradores();
-    } else {
-      fetchMoradores().then((lista) {
-        setState(() {
-          _moradores = lista;
-        });
-      }, onError: (ex) {
-        showMsg(
-            ctx: context,
-            titulo: 'Não foi possível consultar',
-            mensagem: ex.toString());
+    fetchMoradores().then((lista) {
+      setState(() {
+        _moradores = lista;
       });
-    }
+    }, onError: (ex) {
+      showMsg(
+          ctx: context,
+          titulo: 'Não foi possível consultar',
+          mensagem: ex.toString());
+    });
   }
 
   Future<List<Morador>> fetchMoradores() async {
-    return await srvGetMoradores(token: widget.sessao.token);
+    return await server.srvGetMoradores(token: widget.sessao.token);
   }
 
   @override
@@ -92,11 +89,9 @@ class _TelaMoradoresState extends State<TelaMoradores> {
   }
 
   ImageProvider _buildImagemMorador(Morador morador) {
-    if(modoTeste){
-      return AssetImage('assets/${morador.imagemAsset}');
-    }
-    return NetworkImage('https://$urlSrv/imagens/${morador.imagemAsset}',
-        headers: {'token': widget.sessao.token ?? ''});
+    return server.buildImage(
+        url: 'https://$urlSrv/imagens/${morador.imagemAsset}',
+        token: widget.sessao.token);
   }
 
   void _ordenar() {

@@ -43,7 +43,7 @@ class _TelaBoletosState extends State<TelaBoletos> {
       moradorId = widget.sessao.usuario?.morador?.id;
     }
     final condominioId = widget.sessao.usuario!.morador!.condominio!.id!;
-    return srvGetBoletos(
+    return server.srvGetBoletos(
         full: true,
         condominioId: condominioId,
         situacao: _situacaoFiltrar,

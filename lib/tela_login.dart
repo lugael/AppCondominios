@@ -74,7 +74,7 @@ class _StateTelaLogin extends State<TelaLogin> {
   void login() {
     final login = _loginControler.text;
     final senha = _senhaControler.text;
-    srvPostLogin(login, senha).then((Sessao sessao) async {
+    server.srvPostLogin(login, senha).then((Sessao sessao) async {
       await DAO.get().saveSessao(sessao);
       Navigator.pop(context);
     }, onError: (ex) {
